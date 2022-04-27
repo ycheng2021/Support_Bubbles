@@ -2,10 +2,6 @@ const { Schema, Types } = require('mongoose');
 
 const thoughtSchema = new Schema(
     {
-        thoughtId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId(),
-        },
         thoughtName: {
             type: String,
             required: true,
@@ -17,6 +13,12 @@ const thoughtSchema = new Schema(
             type: Date,
             default: Date.now,
         },
+        users: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
     },
     {
         toJSON: {
@@ -25,5 +27,7 @@ const thoughtSchema = new Schema(
         id: false,
     }
 )
+
+const Thought = model('thought', thoughtSchema);
 
 module.exports = thoughtSchema;
