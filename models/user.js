@@ -1,27 +1,40 @@
 const { Schema, model } = require('mongoose');
-const thoughtSchema = require('./Thought');
+const {isEmail} = require('validator') 
 
-// Schema to create Student model
+// Schema to create user model
 const userSchema = new Schema(
   {
-    first: {
+    username: {
       type: String,
+      unique: true,
       required: true,
-      max_length: 50,
+      trim: true
     },
-    last: {
+    email: {
       type: String,
+      unique: true,
       required: true,
-      max_length: 50,
+      validate: [ isEmail, 'invalid email' ]
     },
-    thoughts: [thoughtSchema],
+    thoughts: [{
+      type: Schema.Types.ObjectId, 
+      ref: 'Thought'
+    }], 
+    friends: [this]
   },
   {
     toJSON: {
-      getters: true,
+      virtuals: true,
     },
+    id: false,
   }
 );
+
+userSchema
+  .virtual('friendCount')
+  .get(function() {
+    return `${this.friends.length}`
+  })
 
 const User = model('user', userSchema);
 
