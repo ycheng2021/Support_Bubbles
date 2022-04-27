@@ -4,13 +4,13 @@ const { User, Thought} = require('../models');
 
 
 module.exports = {
-    // get all posts
+    // get all posts /api/thoughts
     getPosts(req, res) {
         Thought.find()
           .then((thoughts) => res.json(thoughts))
           .catch((err) => res.status(500).json(err));
       },
-    // get single post by id
+    // get single post by id /api/thoughts/:id
     getSinglePost(req, res) {
         Thought.findOne({ _id: req.params.userId })
           .select('-__v')
@@ -21,7 +21,7 @@ module.exports = {
           )
           .catch((err) => res.status(500).json(err));
       },
-    // create post
+    // create post 
     createPost(req, res) {
         Thought.create(req.body)
           .then((thought) => res.json(thought))
@@ -30,7 +30,7 @@ module.exports = {
             return res.status(500).json(err);
           });
       },
-    // update post
+    // update post /api/thoughts/id
     updatePost(req, res) {
         Thought.findOneAndUpdate(
           { _id: req.params.userId },
@@ -44,7 +44,7 @@ module.exports = {
           )
           .catch((err) => res.status(500).json(err));
       },
-    // delete post
+    // delete post /api/thoughts/id
     deletePost(req, res) {
         Thought.findOneAndUpdate({ _id: req.params.userId })
           .then((thought) =>

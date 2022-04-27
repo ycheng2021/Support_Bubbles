@@ -1,6 +1,5 @@
-const { Schema, Types } = require('mongoose');
-const Thought = require('./Thought');
-import { isEmail } from 'validator'
+const { Schema, model } = require('mongoose');
+const {isEmail} = require('validator') 
 
 // Schema to create user model
 const userSchema = new Schema(
