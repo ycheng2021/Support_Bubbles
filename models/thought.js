@@ -2,23 +2,21 @@ const { Schema, Types } = require('mongoose');
 
 const thoughtSchema = new Schema(
     {
-        thoughtName: {
+        thoughtText: {
             type: String,
             required: true,
-            maxlength: 50,
-            minlength: 4,
-            default: 'Unnamed assignment',
+            maxlength: 280,
+            minlength: 1,
         },
         createdAt: {
             type: Date,
             default: Date.now,
         },
-        users: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
+        username: {
+            type: String,
+            required: true,
+        },
+       reactions: [reactionSchema]
     },
     {
         toJSON: {

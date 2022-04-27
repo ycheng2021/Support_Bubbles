@@ -1,6 +1,8 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought} = require('../models');
 
+
+
 module.exports = {
     // get all posts
     getPosts(req, res) {
@@ -53,4 +55,7 @@ module.exports = {
           .then(() => res.json({ message: 'User and posts deleted!' }))
           .catch((err) => res.status(500).json(err));
     }
+    // add reaction
+
+    // remove reaction
 }

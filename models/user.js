@@ -4,17 +4,14 @@ const thoughtSchema = require('./Thought');
 // Schema to create Student model
 const userSchema = new Schema(
   {
-    first: {
-      type: String,
-      required: true,
-      max_length: 50,
+    username: {
+
     },
-    last: {
-      type: String,
-      required: true,
-      max_length: 50,
+    email: {
+
     },
     thoughts: [thoughtSchema],
+    friends: [userSchema]
   },
   {
     toJSON: {
