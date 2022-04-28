@@ -16,10 +16,12 @@ const userSchema = new Schema(
       required: true,
       validate: [ isEmail, 'invalid email' ]
     },
-    thoughts: [{
-      type: Schema.Types.ObjectId, 
-      ref: 'Thought'
-    }], 
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId, 
+        ref: 'thought',
+      },
+    ], 
     friends: [this]
   },
   {
@@ -33,7 +35,7 @@ const userSchema = new Schema(
 userSchema
   .virtual('friendCount')
   .get(function() {
-    return `${this.friends.length}`
+    return this.friends.length
   })
 
 const User = model('user', userSchema);
