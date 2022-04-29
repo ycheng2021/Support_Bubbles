@@ -49,21 +49,20 @@ module.exports = {
     )
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: "No post with this id!" })
+          ? res.status(404).json({ message: "No thought with this id!" })
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
   // delete post /api/thoughts/id
   deleteThought(req, res) {
-    Thought.findOneAndUpdate({ _id: req.params.thoughtId })
+    Thought.findOneAndDelete({ _id: req.params.thoughtId })
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: "No post with that ID" })
-          : Thought.deleteMany({ _id: { $in: User.thoughts } })
-      )
-      .then(() => res.json({ message: "User and posts deleted!" }))
-      .catch((err) => res.status(500).json(err));
+          ? res.status(404).json({ message: "No thought with that ID" })
+          : res.json({ message: "Thought deleted!" })
+    )
+    .catch((err) => res.status(500).json(err));
   },
   // add reaction
   addReaction(req, res) {
@@ -94,12 +93,12 @@ module.exports = {
         !reaction
           ? res.status(404).json({ message: "No reaction with that ID" })
           : Thought.findOneAndUpdate(
-              { reactions: req.params.reactionId },
+              { _id: req.params.thoughtId },
               { $pull: { thoughts: req.params.reactionId } },
               { new: true }
             )
       )
-      .then(() => res.json({ message: "User and posts deleted!" }))
+      .then(() => res.json({ message: "Reaction removed!" }))
       .catch((err) => res.status(500).json(err));
   },
 };

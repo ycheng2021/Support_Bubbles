@@ -27,6 +27,20 @@ module.exports = {
             return res.status(500).json(err);
           });
       },
+    // update user
+    updateUser(req, res) {
+      User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $set: req.body },
+        { runValidators: true, new: true }
+      )
+        .then((user) =>
+          !user
+            ? res.status(404).json({ message: "No user with this id!" })
+            : res.json(user)
+        )
+        .catch((err) => res.status(500).json(err));
+    },
     // delete user
     deleteUser(req, res) {
         User.findOneAndDelete({ _id: req.params.userId })
@@ -41,31 +55,22 @@ module.exports = {
     // add friend
     addFriend(req, res) {
       User.findOneAndUpdate( 
-        { _id: req.params.friendId },
-        { $push: { reactions: friend._id } },
+        { _id: req.params.userId },
+        { $push: { friends: req.body._id } },
         { new: true }
         )
-        .then((reaction) =>
-          !reaction
-            ? res.status(404).json({ message: "No reaction with that ID" })
-            : Thought.findOneAndUpdate(
-                { reactions: req.params.reactionId },
-                { $pull: { thoughts: req.params.reactionId } },
-                { new: true }
-              )
-        )
-      .then(() => res.json({ message: "User and posts deleted!" }))
-      .catch((err) => res.status(500).json(err));
+        .then(() => res.json({ message: 'friend added!' }))
+        .catch((err) => res.status(500).json(err));
     },
     // remove friend
     removeFriend(req, res) {
-      Friend.findOneAndDelete( { _id: req.params.reactionId })
-        .then((reaction) =>
-          !reaction
-            ? res.status(404).json({ message: "No reaction with that ID" })
-            : Thought.findOneAndUpdate(
-                { reactions: req.params.reactionId },
-                { $pull: { thoughts: req.params.reactionId } },
+      User.findOneAndUpdate( { _id: req.params.userId })
+        .then((friend) =>
+          !friend
+            ? res.status(404).json({ message: "No friend with that ID" })
+            : User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $pull: { friends: req.params.userId } },
                 { new: true }
               )
         )
