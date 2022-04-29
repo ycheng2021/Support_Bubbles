@@ -1,5 +1,4 @@
-const { Types } = require("mongoose");
-const { User, Thought, Reaction } = require("../models");
+const { User, Thought } = require("../models");
 
 module.exports = {
   // get all posts /api/thoughts
@@ -85,9 +84,9 @@ module.exports = {
   },
   // remove reaction
   removeReaction(req, res) {
-    Thought.findByIdAndUpdate(
+    Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $pull: { reactions: req.params.reactionId } },
+      { $pull: { reactions: {reactionId: req.params.reactionId} } },
       { new: true }
     )
       .then((reaction) =>
@@ -95,7 +94,6 @@ module.exports = {
           ? res.status(404).json({ message: "No reaction with that ID" })
           : res.json(reaction)
       )
-      .then(() => res.json({ message: "Reaction removed!" }))
       .catch((err) => res.status(500).json(err));
   },
 };
