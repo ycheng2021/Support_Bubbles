@@ -70,18 +70,18 @@ module.exports = {
   addReaction(req, res) {
     Thought.findOneAndUpdate(
           { _id: req.params.thoughtId },
-          { $push: { reactions: req.body} },
+          { $addToSet: { reactions: req.body} },
           { new: true }
         )
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({message: "Reaction created, but found no thought with that ID"})
-          : res.json("Created the reaction 🎉")
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+        .then((thought) =>
+          !thought
+            ? res.status(404).json({message: "Reaction created, but found no thought with that ID"})
+            : res.json("Created the reaction 🎉")
+        )
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
   },
   // remove reaction
   removeReaction(req, res) {
