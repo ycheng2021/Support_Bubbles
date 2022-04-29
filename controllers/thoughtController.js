@@ -1,5 +1,4 @@
-const { Types } = require("mongoose");
-const { User, Thought, Reaction } = require("../models");
+const { User, Thought } = require("../models");
 
 module.exports = {
   // get all posts /api/thoughts
@@ -68,33 +67,26 @@ module.exports = {
   },
   // add reaction
   addReaction(req, res) {
-    Reaction.create(req.body)
-      .then((reaction) => {
-        return Thought.findOneAndUpdate(
+    Thought.findOneAndUpdate(
           { _id: req.params.thoughtId },
-          { $push: { reactions: reaction._id } },
+          { $addToSet: { reactions: req.body} },
           { new: true }
-        );
-      })
-      .then((thought) =>
-        !thought
-          ? res
-              .status(404)
-              .json({
-                message: "Reaction created, but found no thought with that ID",
-              })
-          : res.json("Created the reaction 🎉")
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+        )
+        .then((thought) =>
+          !thought
+            ? res.status(404).json({message: "Reaction created, but found no thought with that ID"})
+            : res.json("Created the reaction 🎉")
+        )
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
   },
   // remove reaction
   removeReaction(req, res) {
-    Thought.findByIdAndUpdate(
+    Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $pull: { reactions: req.params.reactionId } },
+      { $pull: { reactions: {reactionId: req.params.reactionId} } },
       { new: true }
     )
       .then((reaction) =>
@@ -102,7 +94,6 @@ module.exports = {
           ? res.status(404).json({ message: "No reaction with that ID" })
           : res.json(reaction)
       )
-      .then(() => res.json({ message: "Reaction removed!" }))
       .catch((err) => res.status(500).json(err));
   },
 };
