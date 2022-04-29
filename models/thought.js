@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const Reaction = require('./Reaction');
 
 const thoughtSchema = new Schema(
     {
@@ -17,7 +16,12 @@ const thoughtSchema = new Schema(
             type: String,
             required: true,
         },
-       reactions: [Reaction]
+        reactions: [
+            {
+                type: Schema.Types.ObjectId, 
+                ref: 'reaction', 
+            }
+        ]
     },
     {
         toJSON: {
@@ -32,7 +36,7 @@ thoughtSchema
     .virtual('reactionCount')
     // getter function
     .get(function() {
-        return `${this.reactions.length}`
+        return this.reactions.length
     });
 
 
